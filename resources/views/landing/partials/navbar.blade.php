@@ -27,7 +27,7 @@
           <div class="collapse navbar-collapse" id="navbarCollapse">
               <div class="navbar-nav ms-auto p-4 p-lg-0">
                   <div class="nav-item dropdown">
-                      <a href="#" class="btn btn-outline-primary py-2 px-3">Login / Register <div class="d-inline-flex btn-sm-square bg-white text-primary rounded-circle ms-2">
+                      <a href="#" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" class="btn btn-outline-primary py-2 px-3">Login / Register <div class="d-inline-flex btn-sm-square bg-white text-primary rounded-circle ms-2">
                               <i class="fa fa-arrow-right"></i>
                           </div></a>
 

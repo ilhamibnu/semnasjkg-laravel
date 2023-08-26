@@ -62,4 +62,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+
+    public function kampus()
+    {
+        return $this->belongsTo(Kampus::class);
+    }
 }
