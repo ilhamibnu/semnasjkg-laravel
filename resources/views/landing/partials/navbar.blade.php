@@ -24,6 +24,7 @@
               <span class="navbar-toggler-icon"></span>
           </button>
 
+          @if(Auth::user() == null)
           <div class="collapse navbar-collapse" id="navbarCollapse">
               <div class="navbar-nav ms-auto p-4 p-lg-0">
                   <div class="nav-item dropdown">
@@ -34,20 +35,24 @@
                   </div>
               </div>
           </div>
-          {{-- <div class="collapse navbar-collapse" id="navbarCollapse">
+          @else
+
+          <div class="collapse navbar-collapse" id="navbarCollapse">
               <div class="navbar-nav ms-auto p-4 p-lg-0">
                   <div class="nav-item dropdown">
-                      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Login / Register</a>
+                      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ Auth::user()->name }}</a>
                       <div class="dropdown-menu m-0">
-                          <a href="service.html" class="dropdown-item">Service</a>
-                          <a href="donate.html" class="dropdown-item">Donate</a>
-                          <a href="team.html" class="dropdown-item">Our Team</a>
-                          <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                          <a href="404.html" class="dropdown-item">404 Page</a>
+                          <a href="/seminar" class="dropdown-item">Seminar</a>
+                          <a href="/unduh-sertifikat" class="dropdown-item">Unduh Sertifikat</a>
+                          <a href="/logout" class="dropdown-item">Logout</a>
+                          {{-- <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                          <a href="404.html" class="dropdown-item">404 Page</a> --}}
                       </div>
                   </div>
               </div>
-          </div> --}}
+          </div>
+          @endif
+
       </nav>
   </div>
   <!-- Navbar End -->
