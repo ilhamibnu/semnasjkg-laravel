@@ -15,15 +15,16 @@ class Presensi extends Model
         'name',
         'waktu_mulai',
         'waktu_selesai',
+        'id_semnas',
     ];
-
-    public function detailpresensi()
-    {
-        return $this->hasMany(DetailPresensi::class);
-    }
 
     public function semnas()
     {
-        return $this->belongsTo(Semnas::class);
+        return $this->belongsTo(Semnas::class, 'id_semnas', 'id');
+    }
+
+    public function detail_presensi()
+    {
+        return $this->hasMany(DetailPresensi::class, 'id_presensi', 'id');
     }
 }

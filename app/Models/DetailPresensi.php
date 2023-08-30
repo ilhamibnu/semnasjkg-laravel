@@ -13,10 +13,17 @@ class DetailPresensi extends Model
 
     protected $fillable = [
         'status',
+        'id_user',
+        'id_presensi',
     ];
 
     public function presensi()
     {
-        return $this->belongsTo(Presensi::class);
+        return $this->belongsTo(Presensi::class, 'id_presensi', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id');
     }
 }

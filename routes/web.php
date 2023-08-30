@@ -24,4 +24,6 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/logout', [AuthController::class, 'logout']);
 
 # Logged in
-Route::get('/seminar', [SemnasController::class, 'index']);
+Route::get('/seminar', [SemnasController::class, 'index'])->middleware('IsLogin');
+Route::post('/pendaftaran', [IndexController::class, 'pendafaran'])->middleware('IsLogin');
+Route::delete('/hapus-seminar/{id}', [SemnasController::class, 'destroy'])->middleware('IsLogin');

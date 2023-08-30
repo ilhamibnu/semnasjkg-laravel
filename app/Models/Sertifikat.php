@@ -18,6 +18,6 @@ class Sertifikat extends Model
 
     public function semnas()
     {
-        return $this->belongsTo(Semnas::class);
+        return $this->belongsTo(Semnas::class, 'id_semnas', 'id');
     }
 }

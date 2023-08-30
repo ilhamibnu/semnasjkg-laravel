@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('link_pembayaran');
             $table->string('kadaluarsa');
             $table->string('status_pembayaran');
-            $table->string('status_serfitikat');
+            $table->string('status_sertifikat');
             $table->timestamps();
         });
     }

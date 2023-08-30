@@ -48,25 +48,23 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-
-
-    public function pendaftaran()
-    {
-        return $this->hasMany(Pendaftaran::class);
-    }
-
-    public function detailpresensi()
-    {
-        return $this->hasMany(DetailPresensi::class);
-    }
-
     public function role()
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(Role::class, 'id_role', 'id');
     }
 
     public function kampus()
     {
-        return $this->belongsTo(Kampus::class);
+        return $this->belongsTo(Kampus::class, 'id_kampus', 'id');
+    }
+
+    public function pendaftaran()
+    {
+        return $this->hasMany(Pendaftaran::class, 'id_user', 'id');
+    }
+
+    public function detailpresensi()
+    {
+        return $this->hasMany(DetailPresensi::class, 'id_user', 'id');
     }
 }

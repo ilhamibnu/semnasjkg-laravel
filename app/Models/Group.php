@@ -14,10 +14,11 @@ class Group extends Model
     protected $fillable = [
         'name',
         'link',
+        'id_semnas'
     ];
 
     public function semnas()
     {
-        return $this->belongsTo(Semnas::class);
+        return $this->belongsTo(Semnas::class, 'id_semnas', 'id');
     }
 }

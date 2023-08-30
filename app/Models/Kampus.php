@@ -15,8 +15,8 @@ class Kampus extends Model
         'name',
     ];
 
-    public function user()
+    public function semnas()
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(Semnas::class, 'id_kampus', 'id');
     }
 }

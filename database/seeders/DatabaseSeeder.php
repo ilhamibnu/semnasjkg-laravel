@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Semnas;
 use App\Models\Kampus;
+use App\Models\Presensi;
 use App\Models\Role;
 
 class DatabaseSeeder extends Seeder
@@ -47,6 +48,20 @@ class DatabaseSeeder extends Seeder
 
         Kampus::create([
             'name' => 'Politekkes Kemenkes Semarang',
+        ]);
+
+        Presensi::create([
+            'id_semnas' => '1',
+            'name' => 'Presensi Seminar Nasional JKG 1',
+            'waktu_mulai' => '2021-08-22 08:00:00',
+            'waktu_selesai' => '2021-08-22 10:00:00',
+        ]);
+
+        Presensi::create([
+            'id_semnas' => '1',
+            'name' => 'Presensi Seminar Nasional JKG 2',
+            'waktu_mulai' => '2021-08-22 10:00:00',
+            'waktu_selesai' => '2021-08-22 12:00:00',
         ]);
     }
 }

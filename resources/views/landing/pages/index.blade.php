@@ -106,7 +106,9 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form>
+                            <form action="/pendaftaran" method="POST">
+                                @csrf
+                                @method('post')
 
                                 {{-- <label for="exampleFormControlInput1" class="form-label">Email address</label> --}}
                                 <input hidden type="text" name="id_semnas" class="form-control" value="{{ $data->id }}" id="exampleFormControlInput1" placeholder="">
@@ -116,21 +118,21 @@
                                 @endif
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Metode Pembayaran</label>
-                                    <select class="form-select" aria-label="Default select example">
+                                    <select name="id_payment" class="form-select" aria-label="Default select example">
                                         <option selected>Pilih Metode Pembayaran</option>
                                         @foreach ($paymentChannel as $dataa )
                                         <option value="{{ $dataa->code }}">{{ $dataa->name }}<br> + Rp.{{ number_format($dataa->fee_customer->flat) }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Join</button>
+                                </div>
                             </form>
 
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Join</button>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -410,6 +412,13 @@
 @if (Session::get('registergagal'))
 <script>
     Swal.fire("Opps!", "Register Gagal", "error");
+
+</script>
+@endif
+
+@if (Session::get('sudahdaftar'))
+<script>
+    Swal.fire("Opps!", "Anda Sudah Terdaftar", "error");
 
 </script>
 @endif

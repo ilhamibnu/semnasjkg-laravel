@@ -17,23 +17,23 @@ class Semnas extends Model
         'harga',
     ];
 
+    public function kampus()
+    {
+        return $this->belongsTo(Kampus::class, 'id_kampus', 'id');
+    }
+
     public function pendaftaran()
     {
-        return $this->hasMany(Pendaftaran::class);
+        return $this->hasMany(Pendaftaran::class, 'id_semnas', 'id');
     }
 
     public function presensi()
     {
-        return $this->hasMany(Presensi::class);
+        return $this->hasMany(Presensi::class, 'id_semnas', 'id');
     }
 
     public function group()
     {
-        return $this->hasMany(Group::class);
-    }
-
-    public function sertifikat()
-    {
-        return $this->hasMany(Sertifikat::class);
+        return $this->hasMany(Group::class, 'id_semnas', 'id');
     }
 }

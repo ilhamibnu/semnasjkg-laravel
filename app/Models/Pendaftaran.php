@@ -13,18 +13,20 @@ class Pendaftaran extends Model
 
     protected $fillable = [
         'link_pembayaran',
-        'kadaluarasa',
+        'kadaluarsa',
         'status_pembayaran',
         'status_sertifikat',
+        'id_user',
+        'id_semnas',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id_user', 'id');
     }
 
     public function semnas()
     {
-        return $this->belongsTo(Semnas::class);
+        return $this->belongsTo(Semnas::class, 'id_semnas', 'id');
     }
 }
