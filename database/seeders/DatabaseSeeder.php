@@ -3,11 +3,15 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Group;
 use Illuminate\Database\Seeder;
 use App\Models\Semnas;
 use App\Models\Kampus;
 use App\Models\Presensi;
 use App\Models\Role;
+use App\Models\Sertifikat;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -36,6 +40,27 @@ class DatabaseSeeder extends Seeder
             'name' => 'Seminar Nasional JKG',
             'deskripsi' => 'Pemaparan materi tentang pengajuan proposal dalam bidang kesehatan gigi dalam rangka PKM Raya',
             'harga' => '50000',
+        ]);
+
+        Sertifikat::create([
+            'id_semnas' => '1',
+            'name' => 'Sertifikat Seminar Nasional JKG',
+            'link' => 'https://www.sertifikat.com/',
+            'status' => 'aktif',
+        ]);
+
+        Group::create([
+            'id_semnas' => '1',
+            'name' => 'Group WA 1',
+            'link' => 'https://www.youtube.com/',
+            'status' => 'tersedia',
+        ]);
+
+        Group::create([
+            'id_semnas' => '1',
+            'name' => 'Group WA 2',
+            'link' => 'https://www.facebook.com/',
+            'status' => 'tersedia',
         ]);
 
         Kampus::create([

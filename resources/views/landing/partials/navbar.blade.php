@@ -42,8 +42,8 @@
                   <div class="nav-item dropdown">
                       <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ Auth::user()->name }}</a>
                       <div class="dropdown-menu m-0">
+                          {{-- <a href="/" class="dropdown-item">Home</a> --}}
                           <a href="/seminar" class="dropdown-item">Seminar</a>
-                          <a href="/unduh-sertifikat" class="dropdown-item">Unduh Sertifikat</a>
                           <a href="/logout" class="dropdown-item">Logout</a>
                           {{-- <a href="testimonial.html" class="dropdown-item">Testimonial</a>
                           <a href="404.html" class="dropdown-item">404 Page</a> --}}

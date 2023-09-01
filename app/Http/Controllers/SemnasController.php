@@ -38,4 +38,30 @@ class SemnasController extends Controller
 
         return redirect('/seminar')->with('hapusseminar', 'Berhasil Hapus');
     }
+
+    public function presensi(Request $request)
+    {
+        $request->validate([
+            'id_detail_presensi' => 'required',
+        ], [
+            'id_detail_presensi.required' => 'Presensi tidak boleh kosong',
+        ]);
+
+        $id_user = Auth::user()->id;
+        $id_detail_presensi = $request->id_detail_presensi;
+
+        $cek_detail_presensi = DetailPresensi::where('id_user', $id_user)->where('id', $id_detail_presensi)->first();
+
+        if ($cek_detail_presensi == null) {
+            return redirect('/seminar')->with('presensierror', 'Data Presensi Tidak Ada');
+        } elseif ($cek_detail_presensi->status == 'sudah') {
+
+            return redirect('/seminar')->with('presensisudah', 'Sudah Presensi');
+        } else {
+            $cek_detail_presensi->status = 'sudah';
+            $cek_detail_presensi->save();
+
+            return redirect('/seminar')->with('presensiberhasil', 'Presensi Berhasil');
+        }
+    }
 }

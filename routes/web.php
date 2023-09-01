@@ -22,8 +22,10 @@ Route::get('/', [IndexController::class, 'index']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/logout', [AuthController::class, 'logout']);
+Route::post('/resetpassword', [AuthController::class, 'resetpassword']);
 
 # Logged in
 Route::get('/seminar', [SemnasController::class, 'index'])->middleware('IsLogin');
 Route::post('/pendaftaran', [IndexController::class, 'pendafaran'])->middleware('IsLogin');
+Route::post('/presensi', [SemnasController::class, 'presensi'])->middleware('IsLogin');
 Route::delete('/hapus-seminar/{id}', [SemnasController::class, 'destroy'])->middleware('IsLogin');

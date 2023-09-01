@@ -345,7 +345,9 @@
                     @endforeach
                 </div>
                 @endif
-                <form action="">
+                <form action="/resetpassword" method="POST">
+                    @method('POST')
+                    @csrf
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Email address</label>
                         <input type="email" name="email" class="form-control" id="exampleFormControlInput1" placeholder="Enter Your Email" required>
@@ -423,5 +425,18 @@
 </script>
 @endif
 
+@if (Session::get('emailtidakada'))
+<script>
+    Swal.fire("Opps!", "Email Belum Terdaftar", "error");
+
+</script>
+@endif
+
+@if (Session::get('codedikirim'))
+<script>
+    Swal.fire("Good!", "Reset Password Berhasil Dikirim", "success");
+
+</script>
+@endif
 
 @endsection

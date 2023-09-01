@@ -6,6 +6,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 class AuthController extends Controller
 {
@@ -86,5 +89,54 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         return redirect()->intended('/')->with('logoutberhasil', 'logout berhasil');
+    }
+
+    public function resetpassword(Request $request)
+    {
+        $request->validate([
+            'email' => ['required'],
+        ], [
+            'email.required' => 'Email tidak boleh kosong',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user) {
+            try {
+
+                $mail = new PHPMailer(true);
+
+                //Server settings
+                $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+                $mail->isSMTP();                                            //Send using SMTP
+                $mail->Host       = 'mail.semnasjkgsby.com';                     //Set the SMTP server to send through
+                $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+                $mail->Username   = 'admin@semnasjkgsby.com';                     //SMTP username
+                $mail->Password   = '%CQw$!a@@#%U';                               //SMTP password
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+                $mail->Port       = 465;                              //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+                //Recipients
+                $mail->setFrom('admin@semnasjkgsby.com', 'Admin Semnas JKG');
+                $mail->addAddress($request->email);     //Add a recipient
+
+                $Code = substr((str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")), 0, 10);
+
+                //Content
+                $mail->isHTML(true);                                  //Set email format to HTML
+                $mail->Subject = 'Password Reset';
+                $mail->Body    = 'Password Anda : ' . $Code . 'Silahkan login dengan password sementara, kemudian lakukan ubah password';
+
+                $updatecode = User::where('email', '=', $request->email)->first();
+                $updatecode->password = bcrypt($Code);
+                $updatecode->save();
+
+                $mail->send();
+            } catch (Exception $e) {
+            }
+            return redirect()->intended('/')->with('codedikirim', 'Reset Password Berhasil');
+        } else {
+            return redirect()->intended('/')->with('emailtidakada', 'Reset Password Gagal');
+        }
     }
 }
