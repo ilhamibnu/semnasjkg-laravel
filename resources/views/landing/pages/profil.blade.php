@@ -1,4 +1,5 @@
 @extends('landing.layouts.main')
+@section('title', 'Profil - ');
 
 @section('content')
 <!-- Page Header Start -->
