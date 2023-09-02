@@ -24,6 +24,10 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/logout', [AuthController::class, 'logout']);
 Route::post('/resetpassword', [AuthController::class, 'resetpassword']);
 
+Route::get('/resetpassword/{code}', [AuthController::class, 'indexresetpassword']);
+
+Route::post('/changepassword', [AuthController::class, 'changepassword']);
+
 # Logged in
 Route::get('/seminar', [SemnasController::class, 'index'])->middleware('IsLogin');
 Route::post('/pendaftaran', [IndexController::class, 'pendafaran'])->middleware('IsLogin');

@@ -439,4 +439,17 @@
 </script>
 @endif
 
+@if (Session::get('berhasilgantipassword'))
+<script>
+    Swal.fire("Good!", "Password Berhasil Diubah", "success");
+
+</script>
+@endif
+
+@if (Session::get('gagalgantipassword'))
+<script>
+    Swal.fire("Opps", "Password Gagal Diubah", "error");
+
+</script>
+@endif
 @endsection

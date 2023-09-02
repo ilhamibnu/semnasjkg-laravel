@@ -125,10 +125,9 @@ class AuthController extends Controller
                 //Content
                 $mail->isHTML(true);                                  //Set email format to HTML
                 $mail->Subject = 'Password Reset';
-                $mail->Body    = 'Password Anda : ' . $Code . 'Silahkan login dengan password sementara, kemudian lakukan ubah password';
-
+                $mail->Body    = 'To reset your password, please click the link below:<br><br><a href="http://127.0.0.1:8000/resetpassword/' . $Code . '">Reset Password</a>';
                 $updatecode = User::where('email', '=', $request->email)->first();
-                $updatecode->password = bcrypt($Code);
+                $updatecode->code = $Code;
                 $updatecode->save();
 
                 $mail->send();
@@ -137,6 +136,45 @@ class AuthController extends Controller
             return redirect()->intended('/')->with('codedikirim', 'Reset Password Berhasil');
         } else {
             return redirect()->intended('/')->with('emailtidakada', 'Reset Password Gagal');
+        }
+    }
+
+    public function indexresetpassword($code)
+    {
+        $user = User::where('code', $code)->first();
+
+        if ($user) {
+            return view('landing.pages.changepassword', [
+                'user' => $user,
+            ]);
+        } else {
+            return redirect()->intended('/')->with('codetidakada', 'Reset Password Gagal');
+        }
+    }
+
+    public function changepassword(Request $request)
+    {
+        $code = $request->code;
+
+        $user = User::where('code', $code)->first();
+
+        if ($user) {
+
+            $request->validate([
+                'password' => 'required',
+                'repassword' => 'required|same:password',
+            ], [
+                'password.required' => 'Password tidak boleh kosong',
+                'repassword.required' => 'Password tidak boleh kosong',
+                'repassword.same' => 'Password tidak sama dengan password',
+            ]);
+
+            $user->password = bcrypt($request->password);
+            $user->save();
+
+            return redirect()->intended('/')->with('berhasilgantipassword', 'Reset Password Berhasil');
+        } else {
+            return redirect()->intended('/')->with('gagalgantipassword', 'Reset Password Gagal');
         }
     }
 }
