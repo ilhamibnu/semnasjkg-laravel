@@ -284,14 +284,18 @@
 
                             @if($datasertifikat->status == 'aktif')
 
-                            <form action="/{{ $datasertifikat->link }}" method="post">
+                            <form action="/unduh-sertifikat" method="post">
+                                @method('POST')
+                                @csrf
+                                <input hidden type="text" name="url" value="{{ $datasertifikat->link }}">
+                                <input hidden type="text" name="id_semnas" value="{{ $data->semnas->id }}">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Full Name</label>
-                                    <input disabled type="text" name="name" value="{{ auth::user()->name }}" class="form-control" id="exampleFormControlInput1" placeholder="Enter Your Name" required>
+                                    <input readonly type="text" name="name" value="{{ auth::user()->name }}" class="form-control" id="exampleFormControlInput1" placeholder="Enter Your Name" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                                    <input disabled type="email" name="email" value="{{ auth::user()->email }}" class="form-control" id="exampleFormControlInput1" placeholder="Enter Your Email" required>
+                                    <input readonly type="email" name="email" value="{{ auth::user()->email }}" class="form-control" id="exampleFormControlInput1" placeholder="Enter Your Email" required>
                                 </div>
 
                                 <div class="modal-footer">
@@ -308,9 +312,6 @@
                             </div>
 
                             @endif
-
-
-
 
                             <?php
 
@@ -416,4 +417,19 @@
 
 </script>
 @endif
+
+@if (Session::get('unduhsertifikat'))
+<script>
+    Swal.fire("Done", "Sertifikat Berhasil Diunduh", "success");
+
+</script>
+@endif
+
+@if (Session::get('unduhsertifikatsudah'))
+<script>
+    Swal.fire("Opps", "Sertifikat Sudah Didownload", "error");
+
+</script>
+@endif
+
 @endsection

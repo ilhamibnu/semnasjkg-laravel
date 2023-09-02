@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
         Sertifikat::create([
             'id_semnas' => '1',
             'name' => 'Sertifikat Seminar Nasional JKG',
-            'link' => 'https://www.sertifikat.com/',
+            'link' => 'https://script.google.com/macros/s/AKfycbzEM5kzczJSTQw6rSC9MDTfWq0LH0xPdWfpO0vjLGmqXnZsqVvfC7B8kjD-ttdX6VsGsg/exec',
             'status' => 'aktif',
         ]);
 

@@ -32,4 +32,5 @@ Route::post('/changepassword', [AuthController::class, 'changepassword']);
 Route::get('/seminar', [SemnasController::class, 'index'])->middleware('IsLogin');
 Route::post('/pendaftaran', [IndexController::class, 'pendafaran'])->middleware('IsLogin');
 Route::post('/presensi', [SemnasController::class, 'presensi'])->middleware('IsLogin');
+Route::post('/unduh-sertifikat', [SemnasController::class, 'unduhsertifikat'])->middleware('IsLogin');
 Route::delete('/hapus-seminar/{id}', [SemnasController::class, 'destroy'])->middleware('IsLogin');

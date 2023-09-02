@@ -64,4 +64,43 @@ class SemnasController extends Controller
             return redirect('/seminar')->with('presensiberhasil', 'Presensi Berhasil');
         }
     }
+
+    public function unduhsertifikat(Request $request)
+    {
+        $url = $request->url;
+        $name = $request->name;
+        $email = $request->email;
+        $id_semnas = $request->id_semnas;
+
+        $cek_pendaftaran = Pendaftaran::where('id_user', Auth::user()->id)->where('id_semnas', $id_semnas)->first();
+
+        if ($cek_pendaftaran->status_sertifikat == 'sudah') {
+            return redirect('/seminar')->with('unduhsertifikatsudah', 'Sertifikat Sudah Diunduh');
+        } else {
+
+            $cek_pendaftaran->status_sertifikat = 'sudah';
+            $cek_pendaftaran->save();
+
+            // membuat form action dengan method post ke url yang diinginkan dengan value yang diinginkan juga
+            echo '<form action="' . $url . '" method="post" id="form-download">';
+            // membuat inputan dengan type hidden untuk mengirimkan data yang dibutuhkan
+            echo '<input hidden type="text" name="name" value="' . $name . '">';
+            echo '<input hidden type="text" name="email" value="' . $email . '">';
+            // membuat tombol submit untuk mengirimkan data
+            echo '<button type="submit" id="btn-download"></button>';
+
+            echo '</form>';
+
+            // membuat script javascript untuk submit secara otomatis
+            echo '<script>';
+            echo 'document.getElementById("btn-download").click();';
+            echo 'document.getElementById("form-download").submit();';
+            echo '</script>';
+
+            // mengembalikan nilai kosong agar tidak ada output yang ditampilkan
+            return '';
+
+            // return redirect('/seminar')->with('unduhsertifikat', 'Unduh Sertifikat Berhasil');
+        }
+    }
 }
