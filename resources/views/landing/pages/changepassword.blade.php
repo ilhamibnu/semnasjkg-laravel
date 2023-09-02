@@ -13,6 +13,23 @@
 
 <div class="container-xxl py-5">
     <div class="container">
+        @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+            </button>
+
+
+            <?php
+
+            $nomer = 1;
+
+            ?>
+
+            @foreach ($errors->all() as $error)
+            <li>{{ $nomer++ }}. {{ $error }}</li>
+            @endforeach
+        </div>
+        @endif
         <form action="/changepassword" method="POST">
             @method('post')
             @csrf

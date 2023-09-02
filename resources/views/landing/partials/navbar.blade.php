@@ -44,6 +44,7 @@
                       <div class="dropdown-menu m-0">
                           {{-- <a href="/" class="dropdown-item">Home</a> --}}
                           <a href="/seminar" class="dropdown-item">Seminar</a>
+                          <a href="/profil" class="dropdown-item">Profil</a>
                           <a href="/logout" class="dropdown-item">Logout</a>
                           {{-- <a href="testimonial.html" class="dropdown-item">Testimonial</a>
                           <a href="404.html" class="dropdown-item">404 Page</a> --}}

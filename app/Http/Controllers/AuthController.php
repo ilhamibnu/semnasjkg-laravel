@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Kampus;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -97,7 +98,7 @@ class AuthController extends Controller
             'email' => ['required'],
         ], [
             'email.required' => 'Email tidak boleh kosong',
-        ]); 
+        ]);
 
         $user = User::where('email', $request->email)->first();
 
@@ -175,6 +176,68 @@ class AuthController extends Controller
             return redirect()->intended('/')->with('berhasilgantipassword', 'Reset Password Berhasil');
         } else {
             return redirect()->intended('/')->with('gagalgantipassword', 'Reset Password Gagal');
+        }
+    }
+
+    public function indexprofil()
+    {
+        $user = User::with('kampus')->where('id', Auth::user()->id)->first();
+        $kampus = Kampus::all();
+
+        return view('landing.pages.profil', [
+            'user' => $user,
+            'kampus' => $kampus,
+        ]);
+    }
+
+    public function updateprofil(Request $request)
+    {
+        if ($request->password == null && $request->repassword == null) {
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required|email',
+                'id_kampus' => 'required',
+            ], [
+                'name.required' => 'Nama tidak boleh kosong',
+                'email.required' => 'Email tidak boleh kosong',
+                'email.email' => 'Email tidak valid',
+                'id_kampus.required' => 'Kampus tidak boleh kosong',
+            ]);
+
+            $user = User::where('id', $request->id_user)->first();
+
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->id_kampus = $request->id_kampus;
+            $user->save();
+
+            return redirect()->intended('/profil')->with('berhasilupdateprofil', 'Update Profil Berhasil');
+        } else {
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required|email',
+                'id_kampus' => 'required',
+                'password' => 'required',
+                'repassword' => 'required|same:password',
+            ], [
+                'name.required' => 'Nama tidak boleh kosong',
+                'email.required' => 'Email tidak boleh kosong',
+                'email.email' => 'Email tidak valid',
+                'id_kampus.required' => 'Kampus tidak boleh kosong',
+                'password.required' => 'Password tidak boleh kosong',
+                'repassword.required' => 'Password tidak boleh kosong',
+                'repassword.same' => 'Password tidak sama dengan password',
+            ]);
+
+            $user = User::where('id', $request->id_user)->first();
+
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->id_kampus = $request->id_kampus;
+            $user->password = bcrypt($request->password);
+            $user->save();
+
+            return redirect()->intended('/profil')->with('berhasilupdateprofil', 'Update Profil Berhasil');
         }
     }
 }
