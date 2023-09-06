@@ -1,5 +1,5 @@
 @extends('landing.layouts.main')
-@section('title', 'Seminar - ');
+@section('title', 'Seminar - ')
 @section('content')
 <!-- Page Header Start -->
 <div class="container-fluid page-header mb-5 wow fadeIn" data-wow-delay="0.1s">
@@ -237,7 +237,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button class="btn btn-success" type="submit">Absen</button>
-                                    <button class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                    <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Close</button>
                                 </div>
                             </form>
                         </div>
@@ -335,7 +335,7 @@
                                 <li>Name : {{ $data->semnas->name }}</li>
                                 <li>Price : Rp. {{ number_format($data->Semnas->harga) }}</li>
                                 <li>Status Pembayaran : {{ $data->status_pembayaran }}</li>
-                                <li>Kadaluarsa Pembayaran : {{ $data->kadaluarsa }}</li>
+                                <li>Kadaluarsa Pembayaran : {{ $data->kadaluarsa}}</li>
                                 <div class="text-center mt-3 mb-3">
                                     <a href="{{ $data->link_pembayaran }}" target="_blank" class="btn btn-success">Bayar</a>
                                 </div>
@@ -349,9 +349,15 @@
                             </div>
 
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                        </div>
+                        <form action="/bayar/{{ $data->id }}" method="POST">
+                            @method('PUT')
+                            @csrf
+                            <div class="modal-footer">
+                                <button class="btn btn-warning" type="submit">Konfirmasi Pembayaran</button>
+                                <button class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+
                     </div>
                 </div>
             </div>
@@ -421,6 +427,13 @@
 @if (Session::get('unduhsertifikat'))
 <script>
     Swal.fire("Done", "Sertifikat Berhasil Diunduh", "success");
+
+</script>
+@endif
+
+@if (Session::get('berhasil'))
+<script>
+    Swal.fire("Done", "Pendaftaran Berhasil, Segera Lakukan Pembayaran", "success");
 
 </script>
 @endif

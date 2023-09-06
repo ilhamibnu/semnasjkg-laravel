@@ -195,12 +195,13 @@ class AuthController extends Controller
         if ($request->password == null && $request->repassword == null) {
             $request->validate([
                 'name' => 'required',
-                'email' => 'required|email',
+                'email' => 'required|email|unique:tb_user,email,' . $request->id_user,
                 'id_kampus' => 'required',
             ], [
                 'name.required' => 'Nama tidak boleh kosong',
                 'email.required' => 'Email tidak boleh kosong',
                 'email.email' => 'Email tidak valid',
+                'email.unique' => 'Email sudah terdaftar',
                 'id_kampus.required' => 'Kampus tidak boleh kosong',
             ]);
 
@@ -215,7 +216,7 @@ class AuthController extends Controller
         } else {
             $request->validate([
                 'name' => 'required',
-                'email' => 'required|email',
+                'email' => 'required|email|unique:tb_user,email,' . $request->id_user,
                 'id_kampus' => 'required',
                 'password' => 'required',
                 'repassword' => 'required|same:password',
@@ -223,6 +224,7 @@ class AuthController extends Controller
                 'name.required' => 'Nama tidak boleh kosong',
                 'email.required' => 'Email tidak boleh kosong',
                 'email.email' => 'Email tidak valid',
+                'email.unique' => 'Email sudah terdaftar',
                 'id_kampus.required' => 'Kampus tidak boleh kosong',
                 'password.required' => 'Password tidak boleh kosong',
                 'repassword.required' => 'Password tidak boleh kosong',

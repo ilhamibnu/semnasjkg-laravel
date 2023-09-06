@@ -111,7 +111,7 @@ class IndexController extends Controller
                     ],
                 ],
                 // expired_time 30 menit
-                'expired_time'   => (time() + (60 * 30)),
+                'expired_time'   => (time() + (30 * 60)),
                 'signature'    => hash_hmac('sha256', $merchantCode . $id . $amount, $privateKey)
             ];
 
@@ -140,8 +140,12 @@ class IndexController extends Controller
                 $pendaftaran = Pendaftaran::find($id);
                 $pendaftaran->link_pembayaran = $response->data->checkout_url;
                 $pendaftaran->status_pembayaran = $response->data->status;
+                // ubah response->data->expired_time ke format datetime
+                $pendaftaran->kadaluarsa =  date('Y-m-d H:i:s', $response->data->expired_time);
                 $pendaftaran->save();
-                return redirect($response->data->checkout_url);
+
+                return redirect('/seminar')->with('berhasil', 'Pendaftaran berhasil');
+                // return redirect($response->data->checkout_url);
             } else {
                 return redirect('/')->with('gagal', 'Pendaftaran gagal');
             }

@@ -103,4 +103,13 @@ class SemnasController extends Controller
             // return redirect('/seminar')->with('unduhsertifikat', 'Unduh Sertifikat Berhasil');
         }
     }
+
+    public function bayar($id)
+    {
+        $pendaftaran = Pendaftaran::find($id);
+        $pendaftaran->status_pembayaran = 'PAID';
+        $pendaftaran->save();
+
+        return redirect('/seminar')->with('bayar', 'Pembayaran Berhasil');
+    }
 }

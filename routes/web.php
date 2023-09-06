@@ -36,3 +36,4 @@ Route::post('/unduh-sertifikat', [SemnasController::class, 'unduhsertifikat'])->
 Route::delete('/hapus-seminar/{id}', [SemnasController::class, 'destroy'])->middleware('IsLogin');
 Route::get('/profil', [AuthController::class, 'indexprofil'])->middleware('IsLogin');
 Route::post('/updateprofil', [AuthController::class, 'updateprofil'])->middleware('IsLogin');
+Route::put('/bayar/{id}', [SemnasController::class, 'bayar'])->middleware('IsLogin');
