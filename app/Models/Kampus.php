@@ -13,10 +13,16 @@ class Kampus extends Model
 
     protected $fillable = [
         'name',
+        'id_jenis_peserta',
     ];
 
     public function semnas()
     {
         return $this->hasMany(Semnas::class, 'id_kampus', 'id');
+    }
+
+    public function jenis_peserta()
+    {
+        return $this->belongsTo(JenisPeserta::class, 'id_jenis_peserta', 'id');
     }
 }

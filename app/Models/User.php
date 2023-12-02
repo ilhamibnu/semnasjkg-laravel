@@ -22,11 +22,14 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
+        'nim',
         'email',
         'password',
+        'nama_instansi',
         'code',
         'id_role',
         'id_kampus',
+        'id_jenis_peserta',
     ];
 
     /**
@@ -67,5 +70,10 @@ class User extends Authenticatable
     public function detailpresensi()
     {
         return $this->hasMany(DetailPresensi::class, 'id_user', 'id');
+    }
+
+    public function jenis_peserta()
+    {
+        return $this->belongsTo(JenisPeserta::class, 'id_jenis_peserta', 'id');
     }
 }

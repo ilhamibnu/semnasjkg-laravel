@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Kampus;
+use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -26,22 +27,62 @@ class AuthController extends Controller
         $user = User::where('email', $credentials['email'])->first();
 
         if ($user) {
-            $userLogin = $user->id_role;
 
-            if ($userLogin == 1) {
-                if (Auth::attempt($credentials)) {
-                    $request->session()->regenerate();
+            if ($user->id_jenis_peserta == '1') {
+                $cekpendaftaran = Pendaftaran::where('id_user', $user->id)->first();
 
-                    return redirect()->intended('/')->with('loginberhasil', 'login berhasil');
+                if ($cekpendaftaran == null) {
+                    return redirect()->intended('/')->with('belumbisalogin', 'login berhasil');
+                } else
+
+                if ($cekpendaftaran->status_pembayaran == 'UNPAID') {
+                    return redirect()->intended('/')->with('belumlunas', 'login berhasil');
                 } else {
-                    return redirect()->intended('/')->with('loginerror', 'login error');
+
+                    if ($user) {
+                        $userLogin = $user->id_role;
+
+                        if ($userLogin == 1) {
+                            if (Auth::attempt($credentials)) {
+                                $request->session()->regenerate();
+
+                                return redirect()->intended('/')->with('loginberhasil', 'login berhasil');
+                            } else {
+                                return redirect()->intended('/')->with('loginerror', 'login error');
+                            }
+                        } elseif ($userLogin == 2) {
+
+                            return redirect()->intended('/')->with('bukanuser', 'login error');
+                        } elseif ($userLogin == 3) {
+
+                            return redirect()->intended('/')->with('failed', 'login error');
+                        }
+                    } else {
+                        return redirect()->intended('/')->with('failed', 'login error');
+                    }
                 }
-            } elseif ($userLogin == 2) {
+            } else {
+                if ($user) {
+                    $userLogin = $user->id_role;
 
-                return redirect()->intended('/')->with('bukanadmin', 'login error');
-            } elseif ($userLogin == 3) {
+                    if ($userLogin == 1) {
+                        if (Auth::attempt($credentials)) {
+                            $request->session()->regenerate();
 
-                return redirect()->intended('/')->with('failed', 'login error');
+                            return redirect()->intended('/')->with('loginberhasil', 'login berhasil');
+                        } else {
+                            return redirect()->intended('/')->with('loginerror', 'login error');
+                        }
+                    } elseif ($userLogin == 2) {
+
+                        return redirect()->intended('/')->with('bukanadmin', 'login error');
+                    } elseif ($userLogin == 3) {
+
+                        return redirect()->intended('/')->with('failed', 'login error');
+                    }
+                } else {
+                    return redirect()->intended('/')->with('failed', 'login error');
+                }
             }
         } else {
             return redirect()->intended('/')->with('failed', 'login error');
@@ -66,11 +107,23 @@ class AuthController extends Controller
             'id_kampus.required' => 'Kampus tidak boleh kosong',
         ]);
 
+        // cek id_jenis_peserta berdasarkan id_kampus
+
+        $cekidjenispeserta = Kampus::where('id', $request->id_kampus)->first();
+
+        if ($request->nama_instansi == null) {
+            $nama_instansi = '-';
+        } else {
+            $nama_instansi = $request->nama_instansi;
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'id_kampus' => $request->id_kampus,
+            'nama_instansi' => $nama_instansi,
+            'id_jenis_peserta' => $cekidjenispeserta->id_jenis_peserta,
             'id_role' => 1,
         ]);
 
@@ -126,7 +179,7 @@ class AuthController extends Controller
                 //Content
                 $mail->isHTML(true);                                  //Set email format to HTML
                 $mail->Subject = 'Password Reset';
-                $mail->Body    = 'To reset your password, please click the link below:<br><br><a href="http://127.0.0.1:8000/resetpassword/' . $Code . '">Reset Password</a>';
+                $mail->Body    = 'To reset your password, please click the link below:<br><br><a href="https://semnasjkgsby.com/resetpassword/' . $Code . '">Reset Password</a>';
                 $updatecode = User::where('email', '=', $request->email)->first();
                 $updatecode->code = $Code;
                 $updatecode->save();
@@ -182,7 +235,7 @@ class AuthController extends Controller
     public function indexprofil()
     {
         $user = User::with('kampus')->where('id', Auth::user()->id)->first();
-        $kampus = Kampus::all();
+        $kampus = Kampus::where('id', '!=', '1')->get();
 
         return view('landing.pages.profil', [
             'user' => $user,
@@ -205,11 +258,23 @@ class AuthController extends Controller
                 'id_kampus.required' => 'Kampus tidak boleh kosong',
             ]);
 
+            // cek id_jenis_peserta berdasarkan id_kampus
+
+            $kampus = Kampus::where('id', $request->id_kampus)->first();
+
             $user = User::where('id', $request->id_user)->first();
+
+            if ($request->nama_instansi == null) {
+                $nama_instansi = '-';
+            } else {
+                $nama_instansi = $request->nama_instansi;
+            }
 
             $user->name = $request->name;
             $user->email = $request->email;
+            $user->nama_instansi = $nama_instansi;
             $user->id_kampus = $request->id_kampus;
+            $user->id_jenis_peserta = $kampus->id_jenis_peserta;
             $user->save();
 
             return redirect()->intended('/profil')->with('berhasilupdateprofil', 'Update Profil Berhasil');
@@ -231,15 +296,76 @@ class AuthController extends Controller
                 'repassword.same' => 'Password tidak sama dengan password',
             ]);
 
+            // cek id_jenis_peserta berdasarkan id_kampus
+
+            $kampus = Kampus::where('id', $request->id_kampus)->first();
+
             $user = User::where('id', $request->id_user)->first();
+
+            if ($request->nama_instansi == null) {
+                $nama_instansi = '-';
+            } else {
+                $nama_instansi = $request->nama_instansi;
+            }
 
             $user->name = $request->name;
             $user->email = $request->email;
+            $user->nama_instansi = $nama_instansi;
             $user->id_kampus = $request->id_kampus;
+            $user->id_jenis_peserta = $kampus->id_jenis_peserta;
             $user->password = bcrypt($request->password);
             $user->save();
 
             return redirect()->intended('/profil')->with('berhasilupdateprofil', 'Update Profil Berhasil');
         }
+    }
+
+    public function indexadminlogin()
+    {
+        return view('admin.login');
+    }
+
+    public function loginadmin(Request $request)
+    {
+        Session::flash('email', $request->email);
+        Session::flash('password', $request->password);
+
+        $credentials = $request->validate([
+            'email' => ['required'],
+            'password' => ['required'],
+        ]);
+
+        $user = User::where('email', $credentials['email'])->first();
+
+        if ($user) {
+            $userLogin = $user->id_role;
+
+            if ($userLogin == 1) {
+                return redirect()->intended('/adminlogin')->with('bukanadmin', 'login error');
+            } elseif ($userLogin == 2) {
+                if (Auth::attempt($credentials)) {
+                    $request->session()->regenerate();
+
+                    return redirect()->intended('/dashboard')->with('loginberhasil', 'login berhasil');
+                } else {
+                    return redirect()->intended('/adminlogin')->with('loginerror', 'login error');
+                }
+            } elseif ($userLogin == 3) {
+                return redirect()->intended('/adminlogin')->with('failed', 'login error');
+            }
+        } else {
+            return redirect()->intended('/adminlogin')->with('failed', 'login error');
+        }
+    }
+
+    public function logoutadmin(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerate();
+
+        return redirect()->intended('/adminlogin')->with('logoutberhasil', 'logout berhasil');
     }
 }

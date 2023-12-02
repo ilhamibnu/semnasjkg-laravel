@@ -1,54 +1,52 @@
-@extends('landing.layouts.main')
+@extends('landing.layout.main')
 @section('title', 'Seminar - ')
 @section('content')
-<!-- Page Header Start -->
-<div class="container-fluid page-header mb-5 wow fadeIn" data-wow-delay="0.1s">
-    <div class="container text-center">
-        <h1 class="display-4 text-white animated slideInDown mb-4">Seminar Anda</h1>
-    </div>
-</div>
-<!-- Page Header End -->
 
-<!-- Service Start -->
 
-<div class="container-xxl py-5">
-    <div class="container">
-        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-            <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">What We Do</div>
-            <h1 class="display-6 mb-5">Learn More What We Do And Get Involved</h1>
-        </div>
-        <div class="row g-4 justify-content-center">
+<section id="hero pricing" class="hero pricing">
+
+    <div class="container" data-aos="fade-up">
+        <header class="section-header">
+            <p>Seminar</p>
+        </header>
+
+        <div class="text-center justify-content-center row gy-4" data-aos="fade-left">
+
+            @if($pendaftaran->count() == 0)
+
+            <div class="alert alert-danger alert-dismissible fade show">
+                <p>Anda Tidak Mengikuti Seminar Apapun.</p>
+            </div>
+
+            @else
 
             @foreach ($pendaftaran as $data)
 
-            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                <div class="service-item bg-white text-center h-100 p-4 p-xl-5">
-                    <img class="img-fluid mb-4" src="{{ asset('landing/img/icon-1.png') }}" alt="">
-                    <h4 class="mb-3">{{ $data->semnas->name }}</h4>
-                    <p class="mb-4">{{ $data->semnas->deskripsi }}</p>
+            <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+                <div class="box">
+                    <h3 style="color: #07d5c0;">{{ $data->semnas->name }}</h3>
+                    <img src="{{ asset('landing/logo/logo-seminar.png') }}" class="img-fluid" alt="">
+                    <!--<ul>-->
+                    <!--    <p>{{ $data->semnas->deskripsi }}-->
+                    <!--        <p>-->
+                    <!--</ul>-->
 
                     @if($data->status_pembayaran == 'PAID')
 
-                    <a class="btn btn-outline-primary px-3 mb-2" href="" data-bs-target="#detailgroup{{ $data->id }}" data-bs-toggle="modal">
+                    <a class="btn btn-buy mb-2" href="" data-bs-target="#detailgroup{{ $data->id }}" data-bs-toggle="modal">
                         Join Group
-                        {{-- <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
-                            <i class="fa fa-arrow-right"></i>
-                        </div> --}}
                     </a>
 
-                    <a class="btn btn-outline-primary px-3 mb-2" href="" data-bs-target="#detailpresensi{{ $data->id }}" data-bs-toggle="modal">
+                    <a class="btn btn-buy mb-2" href="" data-bs-target="#detailpresensi{{ $data->id }}" data-bs-toggle="modal">
                         Presensi
-                        {{-- <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
-                            <i class="fa fa-arrow-right"></i>
-                        </div> --}}
+
                     </a>
+
 
                     @if($data->status_sertifikat == 'belum')
-                    <a class="btn btn-outline-primary px-3" href="" data-bs-target="#detailsertifikat{{ $data->id }}" data-bs-toggle="modal">
+                    <a class="btn btn-buy mb-2" href="" data-bs-target="#detailsertifikat{{ $data->id }}" data-bs-toggle="modal">
                         Unduh Sertifikat
-                        {{-- <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
-                            <i class="fa fa-arrow-right"></i>
-                        </div> --}}
+
                     </a>
                     @else
 
@@ -58,11 +56,9 @@
                     @else
 
 
-                    <a class="btn btn-outline-primary px-3" href="" data-bs-target="#detailpendaftaran{{ $data->id }}" data-bs-toggle="modal">
+                    <a class="btn btn-buy mb-2" href="" data-bs-target="#detailpendaftaran{{ $data->id }}" data-bs-toggle="modal">
                         Bayar
-                        {{-- <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
-                            <i class="fa fa-arrow-right"></i>
-                        </div> --}}
+
                     </a>
 
 
@@ -132,7 +128,7 @@
                             </div>
                             <div class="modal-footer">
 
-                                <button class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Close</button>
                             </div>
 
                         </div>
@@ -247,6 +243,7 @@
             </div>
 
 
+
             <div class="modal fade" id="detailsertifikat{{ $data->id }}" tabindex="-1">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -300,7 +297,7 @@
 
                                 <div class="modal-footer">
                                     <button class="btn btn-success" type="submit">Unduh</button>
-                                    <button class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                    <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Close</button>
                                 </div>
                             </form>
 
@@ -349,14 +346,12 @@
                             </div>
 
                         </div>
-                        <form action="/bayar/{{ $data->id }}" method="POST">
-                            @method('PUT')
-                            @csrf
+                      
                             <div class="modal-footer">
-                                <button class="btn btn-warning" type="submit">Konfirmasi Pembayaran</button>
-                                <button class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                
+                                <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Close</button>
                             </div>
-                        </form>
+                        
 
                     </div>
                 </div>
@@ -375,7 +370,7 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-primary" data-bs-dismiss="modal" data-bs-target="#detailpendaftaran{{ $data->id }}" data-bs-toggle="modal">Close</button>
+                            <button class="btn btn-primary" data-bs-dismiss="modal" type="button" data-bs-target="#detailpendaftaran{{ $data->id }}" data-bs-toggle="modal">Close</button>
                             <form action="/hapus-seminar/{{ $data->id }}" method="post">
                                 @method('DELETE')
                                 @csrf
@@ -386,12 +381,13 @@
                 </div>
             </div>
 
-
             @endforeach
+
+            @endif
         </div>
     </div>
-</div>
-<!-- Service End -->
+
+</section>
 @endsection
 
 @section('script')

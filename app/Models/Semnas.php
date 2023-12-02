@@ -15,6 +15,7 @@ class Semnas extends Model
         'name',
         'deskripsi',
         'harga',
+        'id_jenis_peserta',
     ];
 
     public function kampus()
@@ -35,5 +36,15 @@ class Semnas extends Model
     public function group()
     {
         return $this->hasMany(Group::class, 'id_semnas', 'id');
+    }
+
+    public function jenis_peserta()
+    {
+        return $this->belongsTo(JenisPeserta::class, 'id_jenis_peserta', 'id');
+    }
+
+    public function lomba()
+    {
+        return $this->hasMany(Lomba::class, 'id_semnas', 'id');
     }
 }

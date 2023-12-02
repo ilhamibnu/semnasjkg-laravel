@@ -2,24 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DetailLomba;
 use App\Models\Kampus;
 use App\Models\Semnas;
 use App\Models\Presensi;
 use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 use App\Models\DetailPresensi;
+use App\Models\Lomba;
 use App\Models\User;
+
 
 class IndexController extends Controller
 {
     public function index()
     {
-        $semnas = Semnas::all();
-        $kampus = Kampus::all();
+        // urutkan data semnas berdasarkan id terbesar
+        $semnas = Semnas::orderBy('id', 'desc')->get();
+        $kampus = Kampus::where('id', '!=', 1)->get();
 
         $apiKey       = 'DEV-doRbyZ4kDKF1zjSI7vyhc102PqRkZENKUChHG0xe';
         $privateKey   = 'A4v3H-1qYdq-jmCUh-PnH7H-92ckd';
         $merchantCode = 'T23311';
+
+        // $apiKey       = '9jo7FE9fdXVL3GT9H4kceRZiBzIDqzWVAn3RbHtn';
+        // $privateKey   = 'O6DIJ-NvQmW-3M8p1-PdC4C-P16dB';
+        // $merchantCode = 'T27194';
 
         $curl = curl_init();
 
@@ -44,12 +52,24 @@ class IndexController extends Controller
 
         $paymentChannel = $response->data;
 
+        // cek user sudah login atau belum
 
-        return view('landing.pages.index', [
-            'semnas' => $semnas,
-            'kampus' => $kampus,
-            'paymentChannel' => $paymentChannel,
-        ]);
+        if (auth()->user()) {
+
+            $semnasbyidjenispeserta = Semnas::where('id_jenis_peserta', auth()->user()->id_jenis_peserta)->orderBy('id', 'desc')->get();
+
+            return view('landing.pages.index', [
+                'semnas' => $semnasbyidjenispeserta,
+                'kampus' => $kampus,
+                'paymentChannel' => $paymentChannel,
+            ]);
+        } else {
+            return view('landing.pages.index', [
+                'semnas' => $semnas,
+                'kampus' => $kampus,
+                'paymentChannel' => $paymentChannel,
+            ]);
+        }
     }
 
     public function pendafaran(Request $request)
@@ -57,6 +77,12 @@ class IndexController extends Controller
         // cek apakah user sudah terdaftar dalam seminar
 
         $cek = Pendaftaran::where('id_user', auth()->user()->id)->where('id_semnas', $request->id_semnas)->first();
+
+        $cek_user = Pendaftaran::where('id_user', auth()->user()->id)->first();
+
+        if ($cek_user) {
+            return redirect()->back()->with('usersudahterdaftar', 'Anda sudah terdaftar dalam seminar lain');
+        }
 
         if ($cek) {
             return redirect()->back()->with('sudahdaftar', 'Anda sudah terdaftar dalam seminar ini');
@@ -80,6 +106,10 @@ class IndexController extends Controller
             $privateKey   = 'A4v3H-1qYdq-jmCUh-PnH7H-92ckd';
             $merchantCode = 'T23311';
 
+            // $apiKey       = '9jo7FE9fdXVL3GT9H4kceRZiBzIDqzWVAn3RbHtn';
+            // $privateKey   = 'O6DIJ-NvQmW-3M8p1-PdC4C-P16dB';
+            // $merchantCode = 'T27194';
+
             $ceksemnas = Semnas::find($request->id_semnas);
             $cekuser = User::find(auth()->user()->id);
 
@@ -93,6 +123,22 @@ class IndexController extends Controller
                 $detailpresensi->id_user = $cekuser->id;
                 $detailpresensi->status = 'belum';
                 $detailpresensi->save();
+            }
+
+            // cek id semnas apakah memiliki data lomba atau tidak
+
+            $ceklomba = Lomba::where('id_semnas', $request->id_semnas)->get();
+
+            if ($ceklomba) {
+                foreach ($ceklomba as $lomba) {
+                    $detaillomba = new DetailLomba;
+                    $detaillomba->id_lomba = $lomba->id;
+                    $detaillomba->id_user = $cekuser->id;
+                    $detaillomba->link_pengumpulan = '';
+                    $detaillomba->link_pengumpulan_ktm = '';
+                    $detaillomba->status_unduh = 'belum';
+                    $detaillomba->save();
+                }
             }
 
             $amount       = $ceksemnas->harga;
@@ -155,6 +201,12 @@ class IndexController extends Controller
     public function callback(Request $request)
     {
         $privateKey   = 'A4v3H-1qYdq-jmCUh-PnH7H-92ckd';
+
+        // $apiKey       = '9jo7FE9fdXVL3GT9H4kceRZiBzIDqzWVAn3RbHtn';
+        // $privateKey   = 'O6DIJ-NvQmW-3M8p1-PdC4C-P16dB';
+        // $merchantCode = 'T27194';
+
+
         $callbackSignature = $request->server('HTTP_X_CALLBACK_SIGNATURE');
         $json = $request->getContent();
         $signature = hash_hmac('sha256', $json, $privateKey);
